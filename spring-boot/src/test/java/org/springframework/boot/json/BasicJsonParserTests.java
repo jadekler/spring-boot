@@ -27,5 +27,4 @@ public class BasicJsonParserTests extends AbstractJsonParserTests {
 	protected JsonParser getParser() {
 		return new BasicJsonParser();
 	}
-
 }

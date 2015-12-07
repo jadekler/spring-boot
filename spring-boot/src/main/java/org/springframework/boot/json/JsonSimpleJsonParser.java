@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -28,24 +29,32 @@ import org.json.simple.parser.ParseException;
  * Thin wrapper to adapt {@link org.json.simple.JSONObject} to a {@link JsonParser}.
  *
  * @author Dave Syer
+ * @author Jean de Klerk
  * @since 1.2.0
  * @see JsonParserFactory
  */
 public class JsonSimpleJsonParser implements JsonParser {
 
 	@Override
+    @SuppressWarnings("unchecked")
 	public Map<String, Object> parseMap(String json) {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		try {
-			@SuppressWarnings("unchecked")
-			Map<String, Object> value = (Map<String, Object>) new JSONParser()
-					.parse(json);
-			map.putAll(value);
-		}
-		catch (ParseException ex) {
-			throw new IllegalArgumentException("Cannot parse JSON", ex);
-		}
-		return map;
+        if (json != null) {
+            if (json.startsWith("{")) {
+                Map<String, Object> map = new LinkedHashMap<String, Object>();
+                try {
+                    Map<String, Object> value = (Map<String, Object>) new JSONParser()
+                            .parse(json);
+                    map.putAll(value);
+                }
+                catch (ParseException ex) {
+                    throw new IllegalArgumentException("Cannot parse JSON", ex);
+                }
+                return map;
+            } else if (json.equals("")) {
+                return new HashMap<String, Object>();
+            }
+        }
+        return null;
 	}
 
 	@Override

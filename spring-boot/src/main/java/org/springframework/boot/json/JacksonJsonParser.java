@@ -18,6 +18,7 @@ package org.springframework.boot.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Thin wrapper to adapt Jackson 2 {@link ObjectMapper} to {@link JsonParser}.
  *
  * @author Dave Syer
+ * @author Jean de Klerk
  * @see JsonParserFactory
  */
 public class JacksonJsonParser implements JsonParser {
@@ -32,12 +34,19 @@ public class JacksonJsonParser implements JsonParser {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> parseMap(String json) {
-		try {
-			return new ObjectMapper().readValue(json, Map.class);
-		}
-		catch (Exception ex) {
-			throw new IllegalArgumentException("Cannot parse JSON", ex);
-		}
+        if (json != null) {
+            if (json.startsWith("{")) {
+                try {
+                    return new ObjectMapper().readValue(json, Map.class);
+                }
+                catch (Exception ex) {
+                    throw new IllegalArgumentException("Cannot parse JSON", ex);
+                }
+            } else if (json.equals("")) {
+                return new HashMap<String, Object>();
+            }
+        }
+        return null;
 	}
 
 	@Override

@@ -18,6 +18,7 @@ package org.springframework.boot.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,6 +27,7 @@ import com.google.gson.GsonBuilder;
  * Thin wrapper to adapt {@link Gson} to a {@link JsonParser}.
  *
  * @author Dave Syer
+ * @author Jean de Klerk
  * @since 1.2.0
  * @see JsonParserFactory
  */
@@ -34,10 +36,16 @@ public class GsonJsonParser implements JsonParser {
 	private Gson gson = new GsonBuilder().create();
 
 	@Override
+    @SuppressWarnings("unchecked")
 	public Map<String, Object> parseMap(String json) {
-		@SuppressWarnings("unchecked")
-		Map<String, Object> value = this.gson.fromJson(json, Map.class);
-		return value;
+        if (json != null) {
+            if (json.startsWith("{")) {
+                return this.gson.fromJson(json, Map.class);
+            } else if (json.equals("")) {
+                return new HashMap<String, Object>();
+            }
+        }
+        return null;
 	}
 
 	@Override

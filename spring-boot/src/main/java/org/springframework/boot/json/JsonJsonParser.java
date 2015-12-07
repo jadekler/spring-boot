@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
  * Thin wrapper to adapt {@code org.json.JSONObject} to a {@link JsonParser}.
  *
  * @author Dave Syer
+ * @author Jean de Klerk
  * @since 1.2.0
  * @see JsonParserFactory
  */
@@ -35,9 +37,16 @@ public class JsonJsonParser implements JsonParser {
 
 	@Override
 	public Map<String, Object> parseMap(String json) {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
-		putAll(map, new JSONObject(json));
-		return map;
+        if (json != null) {
+            if (json.startsWith("{")) {
+                Map<String, Object> map = new LinkedHashMap<String, Object>();
+                putAll(map, new JSONObject(json));
+                return map;
+            } else if (json.equals("")) {
+                return new HashMap<String, Object>();
+            }
+        }
+        return null;
 	}
 
 	private void putAll(Map<String, Object> map, JSONObject object) {

@@ -18,6 +18,7 @@ package org.springframework.boot.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -25,6 +26,7 @@ import org.yaml.snakeyaml.Yaml;
  * Thin wrapper to adapt Snake {@link Yaml} to {@link JsonParser}.
  *
  * @author Dave Syer
+ * @author Jean de Klerk
  * @see JsonParserFactory
  */
 public class YamlJsonParser implements JsonParser {
@@ -32,7 +34,14 @@ public class YamlJsonParser implements JsonParser {
 	@Override
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> parseMap(String json) {
-		return new Yaml().loadAs(json, Map.class);
+        if (json != null) {
+            if (json.startsWith("{")) {
+                return new Yaml().loadAs(json, Map.class);
+            } else if (json.equals("")) {
+                return new HashMap<String, Object>();
+            }
+        }
+        return null;
 	}
 
 	@Override
