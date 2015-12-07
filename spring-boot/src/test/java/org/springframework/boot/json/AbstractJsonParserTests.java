@@ -40,12 +40,12 @@ public abstract class AbstractJsonParserTests {
 
     @Test
     public void parseMap_null() throws Exception {
-        assertThat(getParser().parseMap(null), nullValue());
+        assertThat(this.parser.parseMap(null), nullValue());
     }
 
     @Test
     public void parseMap_emptyString() throws Exception {
-        assertThat(getParser().parseMap("").entrySet().size(), equalTo(0));
+        assertThat(this.parser.parseMap("").size(), equalTo(0));
     }
 
 	@Test
@@ -69,6 +69,16 @@ public abstract class AbstractJsonParserTests {
 		Map<String, Object> map = this.parser.parseMap("{}");
 		assertEquals(0, map.size());
 	}
+
+    @Test
+    public void parseList_null() throws Exception {
+        assertThat(this.parser.parseList(null), nullValue());
+    }
+
+    @Test
+    public void parseList_emptyString() throws Exception {
+        assertThat(this.parser.parseList("").size(), equalTo(0));
+    }
 
 	@Test
 	public void parseList_simpleList() {
