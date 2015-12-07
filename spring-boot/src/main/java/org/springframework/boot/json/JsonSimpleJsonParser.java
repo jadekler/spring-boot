@@ -17,10 +17,10 @@
 package org.springframework.boot.json;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -35,8 +35,8 @@ import org.json.simple.parser.ParseException;
  */
 public class JsonSimpleJsonParser implements JsonParser {
 
-	@Override
     @SuppressWarnings("unchecked")
+	@Override
 	public Map<String, Object> parseMap(String json) {
         if (json != null) {
             if (json.startsWith("{")) {
@@ -57,18 +57,27 @@ public class JsonSimpleJsonParser implements JsonParser {
         return null;
 	}
 
+    @SuppressWarnings("unchecked")
 	@Override
 	public List<Object> parseList(String json) {
-		List<Object> nested = new ArrayList<Object>();
-		try {
-			@SuppressWarnings("unchecked")
-			List<Object> value = (List<Object>) new JSONParser().parse(json);
-			nested.addAll(value);
+        if (json != null) {
+			json = json.trim();
+			if (json.startsWith("[")) {
+				List<Object> nested = new ArrayList<Object>();
+                try {
+                    List<Object> value = (List<Object>) new JSONParser().parse(json);
+                    nested.addAll(value);
+                }
+                catch (ParseException ex) {
+                    throw new IllegalArgumentException("Cannot parse JSON", ex);
+                }
+                return nested;
+			}
+			else if (json.trim().equals("")) {
+				return new ArrayList<Object>();
+			}
 		}
-		catch (ParseException ex) {
-			throw new IllegalArgumentException("Cannot parse JSON", ex);
-		}
-		return nested;
+		return null;
 	}
 
 }

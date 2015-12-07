@@ -16,9 +16,10 @@
 
 package org.springframework.boot.json;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -44,10 +45,19 @@ public class YamlJsonParser implements JsonParser {
         return null;
 	}
 
+    @SuppressWarnings("unchecked")
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Object> parseList(String json) {
-		return new Yaml().loadAs(json, List.class);
+        if (json != null) {
+			json = json.trim();
+			if (json.startsWith("[")) {
+				return new Yaml().loadAs(json, List.class);
+			}
+			else if (json.trim().equals("")) {
+				return new ArrayList<Object>();
+			}
+		}
+		return null;
 	}
 
 }

@@ -16,9 +16,10 @@
 
 package org.springframework.boot.json;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,8 +36,8 @@ public class GsonJsonParser implements JsonParser {
 
 	private Gson gson = new GsonBuilder().create();
 
-	@Override
     @SuppressWarnings("unchecked")
+	@Override
 	public Map<String, Object> parseMap(String json) {
         if (json != null) {
             if (json.startsWith("{")) {
@@ -48,11 +49,19 @@ public class GsonJsonParser implements JsonParser {
         return null;
 	}
 
+    @SuppressWarnings("unchecked")
 	@Override
 	public List<Object> parseList(String json) {
-		@SuppressWarnings("unchecked")
-		List<Object> value = this.gson.fromJson(json, List.class);
-		return value;
+        if (json != null) {
+			json = json.trim();
+			if (json.startsWith("[")) {
+				return this.gson.fromJson(json, List.class);
+			}
+			else if (json.trim().equals("")) {
+				return new ArrayList<Object>();
+			}
+		}
+		return null;
 	}
 
 }

@@ -21,10 +21,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Base for {@link JsonParser} tests.
@@ -40,12 +38,12 @@ public abstract class AbstractJsonParserTests {
 
     @Test
     public void parseMap_null() throws Exception {
-        assertThat(getParser().parseMap(null), nullValue());
+        assertNull(this.parser.parseMap(null));
     }
 
     @Test
     public void parseMap_emptyString() throws Exception {
-        assertThat(getParser().parseMap("").entrySet().size(), equalTo(0));
+        assertEquals(this.parser.parseMap("").size(), 0);
     }
 
 	@Test
@@ -69,6 +67,16 @@ public abstract class AbstractJsonParserTests {
 		Map<String, Object> map = this.parser.parseMap("{}");
 		assertEquals(0, map.size());
 	}
+
+    @Test
+    public void parseList_null() throws Exception {
+        assertNull(this.parser.parseList(null));
+    }
+
+    @Test
+    public void parseList_emptyString() throws Exception {
+        assertEquals(this.parser.parseList("").size(), 0);
+    }
 
 	@Test
 	public void parseList_simpleList() {

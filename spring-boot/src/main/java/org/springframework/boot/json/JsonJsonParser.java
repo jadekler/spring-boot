@@ -17,10 +17,10 @@
 package org.springframework.boot.json;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -86,9 +86,18 @@ public class JsonJsonParser implements JsonParser {
 
 	@Override
 	public List<Object> parseList(String json) {
-		List<Object> nested = new ArrayList<Object>();
-		addAll(nested, new JSONArray(json));
-		return nested;
+        if (json != null) {
+			json = json.trim();
+			if (json.startsWith("[")) {
+				List<Object> nested = new ArrayList<Object>();
+                addAll(nested, new JSONArray(json));
+                return nested;
+			}
+			else if (json.trim().equals("")) {
+				return new ArrayList<Object>();
+			}
+		}
+		return null;
 	}
 
 }
